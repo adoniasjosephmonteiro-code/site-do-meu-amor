@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Especial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #e63917;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sistema de partículas de corações roxos / escuros */
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            color: #2b102b;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp 6s infinite ease-in-out;
+            opacity: 0.7;
+            bottom: -50px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-50vh) translateX(30px) rotate(20deg);
+            }
+            100% {
+                transform: translateY(-105vh) translateX(-30px) rotate(-20deg);
+                opacity: 0;
+            }
+        }
+
+        /* Estilização dos Cards */
+        .card {
+            background-color: #461914;
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            width: 95%;
+            max-width: 360px;
+            box-sizing: border-box;
+            z-index: 10;
+            position: relative;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .emoji-principal {
+            font-size: 90px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Botões */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-sim, .btn-proximo, .btn-enviar {
+            background-color: #f24e1e;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-container button {
+            width: 120px;
+        }
+
+        .btn-nao {
+            background-color: #f24e1e;
+            color: white;
+        }
+
+        /* Inputs de Data e Hora */
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            background-color: #31110e;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            text-align: center;
+        }
+
+        /* Grid de Opções (Comida e Vibe) */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .option-card {
+            background-color: transparent;
+            border: 2px solid #5d251f;
+            border-radius: 15px;
+            padding: 15px 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .option-card .icon {
+            font-size: 24px;
+        }
+
+        .option-card.selected {
+            background-color: #5d251f;
+            border-color: #f24e1e;
+        }
+
+        /* Tela Final (Resumo) */
+        .resumo-lista {
+            text-align: left;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .resumo-item {
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="hearts-container"></div>
+
+    <div id="tela1" class="card">
+        <span class="emoji-principal">🥺</span>
+        <h2>Você aceitaria ir à um date comigo?</h2>
+        <div class="btn-container">
+            <button type="button" class="btn-sim" onclick="irParaTela(2)">SIM</button>
+            <button type="button" id="btnNao" class="btn-nao" onclick="mudarBotaoNao()">NÃO</button>
+        </div>
+    </div>
+
+    <div id="tela2" class="card hidden">
+        <span class="emoji-principal">😏🌹</span>
+        <h2>Você disse sim? 🥺</h2>
+        <p>Eu estava esperando você dizer não kkkk</p>
+        <button type="button" class="btn-proximo" onclick="irParaTela(3)">PRÓXIMO ➔</button>
+    </div>
+
+    <div id="tela3" class="card hidden">
+        <h2>📅 Quando você tá livre?</h2>
+        <div class="input-group">
+            <label>Escolhe a data</label>
+            <input type="date" id="inputData">
+        </div>
+        <div class="input-group">
+            <label>Escolhe o horário</label>
+            <input type="time" id="inputHora">
+        </div>
+        <button type="button" class="btn-proximo" style="margin-top: 15px;" onclick="salvarDataHora()">SELECIONAR A DATA 💙</button>
+    </div>
+
+    <div id="tela4" class="card hidden">
+        <h2>O QUE TÁ AFIM? 😏</h2>
+        <div class="options-grid">
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Hambúrguer')">
+                <span class="icon">🍔</span><span>Hambúrguer</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Sushi')">
+                <span class="icon">🍣</span><span>Sushi</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Massas')">
+                <span class="icon">🍝</span><span>Massas</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Tacos')">
+                <span class="icon">🌮</span><span>Tacos</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Pizza')">
+                <span class="icon">🍕</span><span>Pizza</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'comida', 'Açaí')">
+                <span class="icon">🍧</span><span>Açaí</span>
+            </div>
+        </div>
+        <button id="btnAvancarComida" type="button" class="btn-proximo" onclick="avancarComida()">ESCOLHE PRIMEIRO 👇</button>
+    </div>
+
+    <div id="tela5" class="card hidden">
+        <h2>QUAL É A VIBE? 🌟</h2>
+        <p style="font-size: 13px; margin-top: -15px; color: #ccc;">Escolhe a atividade ideal</p>
+        <div class="options-grid">
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Golfe')">
+                <span class="icon">⛳</span><span>Golfe</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Caminhada')">
+                <span class="icon">🚶</span><span>Caminhada</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Cinema')">
+                <span class="icon">🎬</span><span>Cinema</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Dança')">
+                <span class="icon">💃</span><span>Dança</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Parque')">
+                <span class="icon">🛝</span><span>Parque</span>
+            </div>
+            <div class="option-card" onclick="selecionarOpcao(this, 'vibe', 'Praia')">
+                <span class="icon">🏖️</span><span>Praia</span>
+            </div>
+        </div>
+        <button id="btnAvancarVibe" type="button" class="btn-proximo" onclick="gerarResumo()">ESCOLHE PRIMEIRO 👇</button>
+    </div>
+
+    <div id="tela6" class="card hidden">
+        <span class="emoji-principal" style="font-size: 100px; margin-bottom: 5px;">🐧🌹</span>
+        <h2 style="margin-bottom: 5px; font-size: 22px;">TÔ COM VOCÊ, GATINHA. 💙</h2>
+        <p style="font-size: 14px; color: #e0e0e0; margin-bottom: 25px;">Fica pronta que eu vou te buscar 🚗</p>
+        
+        <div class="resumo-lista">
+            <div class="resumo-item">🗓️ <span id="resumoData"></span></div>
+            <div class="resumo-item">⏰ <span id="resumoHora"></span></div>
+            <div class="resumo-item">🍲 <span id="resumoComida"></span></div>
+            <div class="resumo-item">✨ <span id="resumoVibe"></span></div>
+        </div>
+
+        <button type="button" id="btnConfirmar" class="btn-enviar" onclick="enviarParaEmail()">CONFIRMAR DATE! 🚀</button>
+    </div>
+
+    <script>
+        // Gerador de corações roxos flutuantes ao fundo
+        const container = document.getElementById('hearts-container');
+        const heartEmojis = ['🖤', '💜', '🖤', '💜'];
+        
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            container.appendChild(heart);
+        }
+
+        // Sistema do botão Não alterando os textos
+        const textosNao = ["Tem certeza?", "Absoluta?", "Sério mesmo?"];
+        let indexNao = 0;
+
+        function mudarBotaoNao() {
+            const btnNao = document.getElementById('btnNao');
+            if (indexNao < textosNao.length) {
+                btnNao.innerText = textosNao[indexNao];
+                indexNao++;
+            } else {
+                indexNao = 0;
+                btnNao.innerText = "NÃO";
+            }
+        }
+
+        // Navegador de telas
+        function irParaTela(numeroTela) {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`tela${i}`).classList.add('hidden');
+            }
+            document.getElementById(`tela${numeroTela}`).classList.remove('hidden');
+        }
+
+        // Armazenamento das escolhas
+        let dataEscolhida = "";
+        let horaEscolhida = "";
+        let comidaEscolhida = "";
+        let vibeEscolhida = "";
+
+        function salvarDataHora() {
+            const dataInput = document.getElementById('inputData').value;
+            const horaInput = document.getElementById('inputHora').value;
+
+            if (!dataInput || !horaInput) {
+                alert("Por favor, preencha a data e o horário!");
+                return;
+            }
+
+            const partes = dataInput.split('-');
+            const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
+            const dia = String(dataObj.getDate()).padStart(2, '0');
+            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            const mes = meses[dataObj.getMonth()];
+            const ano = dataObj.getFullYear();
+
+            dataEscolhida = `${dia} de ${mes} de ${ano}`;
+            horaEscolhida = horaInput;
+
+            irParaTela(4);
+        }
+
+        function selecionarOpcao(elemento, tipo, valor) {
+            const pai = elemento.parentElement;
+            const itens = pai.querySelectorAll('.option-card');
+            itens.forEach(item => item.classList.remove('selected'));
+            
+            elemento.classList.add('selected');
+
+            if (tipo === 'comida') {
+                comidaEscolhida = valor;
+                document.getElementById('btnAvancarComida').innerText = "PRÓXIMO ➔";
+            } else if (tipo === 'vibe') {
+                vibeEscolhida = valor;
+                document.getElementById('btnAvancarVibe').innerText = "PRÓXIMO ➔";
+            }
+        }
+
+        function avancarComida() {
+            if (!comidaEscolhida) {
+                alert("Escolha uma opção de comida primeiro!");
+                return;
+            }
+            irParaTela(5);
+        }
+
+        function gerarResumo() {
+            if (!vibeEscolhida) {
+                alert("Escolha uma atividade ideal primeiro!");
+                return;
+            }
+
+            document.getElementById('resumoData').innerText = dataEscolhida;
+            document.getElementById('resumoHora').innerText = horaEscolhida;
+            document.getElementById('resumoComida').innerText = comidaEscolhida;
+            document.getElementById('resumoVibe').innerText = vibeEscolhida;
+
+            irParaTela(6);
+        }
+
+        function enviarParaEmail() {
+            const btn = document.getElementById('btnConfirmar');
+            btn.innerText = "ENVIANDO RECONVITE...";
+            btn.disabled = true;
+
+            // Envio assíncrono direto para a sua caixa usando a API integrada
+            fetch("https://formspree.io/f/mpwqpzzg", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: "adoniasjosephmonteiro@gmail.com",
+                    _subject: "Ayla respondeu seu convite de Date! 😍",
+                    data: dataEscolhida,
+                    horario: horaEscolhida,
+                    comida: comidaEscolhida,
+                    vibe: vibeEscolhida
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("As respostas foram enviadas para o Adonias! Prepare-se para o Date! ❤️");
+                    btn.innerText = "ENVIADO COM SUCESSO! ✔️";
+                } else {
+                    alert("Ocorreu um pequeno erro ao enviar. Tente novamente!");
+                    btn.innerText = "CONFIRMAR DATE! 🚀";
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                alert("Erro de conexão. Verifique a internet!");
+                btn.innerText = "CONFIRMAR DATE! 🚀";
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
